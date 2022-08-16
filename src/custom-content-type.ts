@@ -1,4 +1,5 @@
-import { App, createApp, ComponentPublicInstance, VNode, Slot, h, AppContext } from 'vue'
+import { ComponentPublicInstance, VNode, h } from 'vue'
+import { createApp, App } from 'vue-demi'
 import { createPlugin, PluginDef } from '@fullcalendar/core'
 
 interface RootComponentData {
@@ -9,13 +10,13 @@ type RootComponentInstance = ComponentPublicInstance<{}, {}, RootComponentData>
 /*
 wrap it in an object with a `vue` key, which the custom content-type handler system will look for
 */
-export function wrapVDomGenerator(vDomGenerator: Slot) {
+export function wrapVDomGenerator(vDomGenerator: any) {
   return function(props: any) {
     return { vue: vDomGenerator(props) }
   }
 }
 
-export function createVueContentTypePlugin(appContext: AppContext): PluginDef {
+export function createVueContentTypePlugin(appContext: any): PluginDef {
   return createPlugin({
     contentTypeHandlers: {
       vue: () => buildVDomHandler(appContext), // looks for the `vue` key
@@ -23,7 +24,7 @@ export function createVueContentTypePlugin(appContext: AppContext): PluginDef {
   })
 }
 
-function buildVDomHandler(appContext: AppContext) {
+function buildVDomHandler(appContext: any) {
   let currentEl: HTMLElement
   let app: App
   let componentInstance: RootComponentInstance
@@ -43,7 +44,7 @@ function buildVDomHandler(appContext: AppContext) {
       let innerEl = document.createElement('span')
       el.appendChild(innerEl)
 
-      componentInstance = app.mount(innerEl) as RootComponentInstance
+      componentInstance = app.mount(innerEl) as any as RootComponentInstance
     } else {
       componentInstance.content = vDomContent
     }
@@ -58,7 +59,7 @@ function buildVDomHandler(appContext: AppContext) {
   return { render, destroy }
 }
 
-function initApp(initialContent: VNode[], appContext: AppContext): App {
+function initApp(initialContent: VNode[], appContext: any): App {
   // TODO: do something with appContext
   return createApp({
     data() {

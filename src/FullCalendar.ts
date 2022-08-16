@@ -1,4 +1,4 @@
-import { PropType, defineComponent, h, Slots, AppContext } from 'vue'
+import Vue, { PropType, h, defineComponent } from 'vue'
 import { Calendar, CalendarOptions } from '@fullcalendar/core'
 import { OPTION_IS_COMPLEX } from './options'
 import { shallowCopy, mapHash } from './utils'
@@ -15,16 +15,16 @@ const FullCalendar = defineComponent({
   render() {
     return h('div', {
       // when renderId is changed, Vue will trigger a real-DOM async rerender, calling beforeUpdate/updated
-      attrs: { 'data-fc-render-id': this.renderId }
+      attrs: { 'data-fc-render-id': (this as any).renderId }
     })
   },
 
   mounted() {
     // store internal data (slotOptions, calendar)
     // https://github.com/vuejs/vue/issues/1988#issuecomment-163013818
-    (this as any).slotOptions = mapHash(this.$slots, wrapVDomGenerator) // needed for buildOptions
-    let calendarOptions = this.buildOptions(this.options, this.$.appContext)
-    let calendar = new Calendar(this.$el as HTMLElement, calendarOptions)
+    (this as any).slotOptions = mapHash((this as any).$slots, wrapVDomGenerator) // needed for buildOptions
+    let calendarOptions = (this as any).buildOptions((this as any).options, (this as any).$.appContext)
+    let calendar = new Calendar((this as any).$el as HTMLElement, calendarOptions)
     ;(this as any).calendar = calendar
     calendar.render()
   },
@@ -35,11 +35,12 @@ const FullCalendar = defineComponent({
   },
 
   beforeUpdate() {
-    this.getApi().resumeRendering() // the watcher handlers paused it
+    (this as any).getApi().resumeRendering() // the watcher handlers paused it
   },
 
+  // @ts-ignore
   beforeUnmount() {
-    this.getApi().destroy()
+    (this as any).getApi().destroy()
   },
 
   watch: buildWatchers()
@@ -58,11 +59,11 @@ function initData() {
 function buildOptions(
   this: any,
   suppliedOptions: CalendarOptions | undefined,
-  appContext: AppContext,
+  appContext: any,
 ): CalendarOptions {
   suppliedOptions = suppliedOptions || {}
   return {
-    ...this.slotOptions,
+    ...(this as any).slotOptions,
     ...suppliedOptions, // spread will pull out the values from the options getter functions
     plugins: (suppliedOptions.plugins || []).concat([
       createVueContentTypePlugin(appContext)
@@ -72,7 +73,7 @@ function buildOptions(
 
 
 function getApi(this: any) {
-  return this.calendar
+  return (this as any).calendar
 }
 
 
@@ -88,13 +89,13 @@ function buildWatchers() {
     options: {
       deep: true,
       handler(this: FullCalendarInstance, options: CalendarOptions) {
-        let calendar = this.getApi()
+        let calendar = (this as any).getApi()
         calendar.pauseRendering()
 
-        let calendarOptions = this.buildOptions(options, this.$.appContext)
+        let calendarOptions = (this as any).buildOptions(options, (this as any).$.appContext)
         calendar.resetOptions(calendarOptions)
 
-        this.renderId++ // will queue a rerender
+        (this as any).renderId++ // will queue a rerender
       }
     }
   }
@@ -109,7 +110,7 @@ function buildWatchers() {
         // unfortunately the handler is called with undefined if new props were set, but the complex one wasn't ever set
         if (val !== undefined) {
 
-          let calendar = this.getApi()
+          let calendar = (this as any).getApi()
           calendar.pauseRendering()
           calendar.resetOptions({
             // the only reason we shallow-copy is to trick FC into knowing there's a nested change.
@@ -117,7 +118,7 @@ function buildWatchers() {
             [complexOptionName]: shallowCopy(val)
           }, true)
 
-          this.renderId++ // will queue a rerender
+          (this as any).renderId++ // will queue a rerender
         }
       }
     }

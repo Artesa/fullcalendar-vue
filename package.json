@@ -1,6 +1,6 @@
 {
-  "name": "@fullcalendar/vue3",
-  "version": "6.0.0-beta.1",
+  "name": "@artesa/fullcalendar-vue",
+  "version": "6.0.0",
   "title": "FullCalendar Vue 3 Component",
   "description": "An official FullCalendar component for Vue 3",
   "keywords": [
@@ -12,7 +12,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/fullcalendar/fullcalendar-vue.git"
+    "url": "https://github.com/artesa/fullcalendar-vue.git"
   },
   "scripts": {
     "tsc": "tsc -p tsconfig.json",
@@ -29,7 +29,7 @@
     "tslib": "^2.1.0"
   },
   "peerDependencies": {
-    "vue": "^3.0.11"
+    "vue": "^2.7.8"
   },
   "devDependencies": {
     "@babel/core": "^7.10.2",
@@ -55,8 +55,10 @@
     "source-map-loader": "^1.1.1",
     "terser": "^4.8.0",
     "typescript": "^4.0.5",
-    "vue": "^3.0.11",
-    "vue-i18n": "next"
+    "vue": "^2.7.8",
+    "vue-template-compiler": "^2.7.8",
+    "vue-demi": "^0.13.7",
+    "vue-i18n": "^8.27.2"
   },
   "main": "dist/main.cjs.js",
   "module": "dist/main.js",
