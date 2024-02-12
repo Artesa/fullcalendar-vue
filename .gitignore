@@ -7,3 +7,5 @@ dist
 
 # Outer monorepo
 .turbo
+
+.DS_Store
