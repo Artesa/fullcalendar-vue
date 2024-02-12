@@ -64,18 +64,18 @@ const FullCalendar = defineComponent({
   },
 
   beforeUpdate() {
-    this.getApi().resumeRendering() // the watcher handlers paused it
+    this.getApi()?.resumeRendering() // the watcher handlers paused it
   },
 
   updated() {
     if (getSecret(this).needCustomRenderingResize) {
       getSecret(this).needCustomRenderingResize = false
-      this.getApi().updateSize()
+      this.getApi()?.updateSize()
     }
   },
 
   beforeUnmount() {
-    this.getApi().destroy()
+    this.getApi()?.destroy()
   },
 
   watch: buildWatchers()
